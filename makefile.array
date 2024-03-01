@@ -1,0 +1,2 @@
+all:
+	g++ lab_array.cpp ArrStack_functions.cpp ArrStack_tests.cpp
