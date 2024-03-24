@@ -6,7 +6,6 @@
 typedef int elem_t;
 
 const size_t MILLION = 1000000;
-const size_t BASIC_ARRAY_SIZE = 1024; 
 
 enum ERROR_CALL
 {
@@ -18,10 +17,10 @@ struct ArrStack
 {
     elem_t* data;
     size_t capacity;
-    size_t fcp;
+    size_t size;
 };
 
-struct ArrStack* stack_ctr (size_t size, size_t element_size);
+struct ArrStack* stack_ctr ();
 
 struct ArrStack* stack_dtr (struct ArrStack* st);
 

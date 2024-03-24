@@ -4,7 +4,7 @@
 #include <time.h>
 
 #include "ListStack_functions.h"
-#include "ListStack_tests.h"
+#include "../Tests/Tests.h"
 
 int main ()
 {
@@ -12,15 +12,15 @@ int main ()
     
     double time_spent = 0.0;
 
-    time_spent = go_test_one (stack);
+    TEST_ONE(ListStack, &time_spent);
     
     printf ("list_test 1: %f\n", time_spent);
 
-    time_spent = go_test_two (stack);
+    TEST_TWO(ListStack, &time_spent);
     
     printf ("list_test 2: %f\n", time_spent);
 
-    time_spent = go_test_three (stack);
+    TEST_THREE(ListStack, &time_spent);
     
     printf ("list_test 3: %f\n", time_spent);
 
@@ -29,7 +29,7 @@ int main ()
     printf ("After running test4, the results of the work on which the next schedule was built "
     "will be recorded in a file ListTest4.txt\n");
 
-    test_four ();
+    TEST_FOUR(ListStack, "./ListTest4.txt");
 
     return 0;
 }

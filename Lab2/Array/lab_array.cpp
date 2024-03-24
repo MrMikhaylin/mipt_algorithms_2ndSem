@@ -4,23 +4,23 @@
 #include <time.h>
 
 #include "ArrStack_functions.h"
-#include "ArrStack_tests.h"
+#include "../Tests/Tests.h"
 
 int main()
 {
-    struct ArrStack* stack = stack_ctr (BASIC_ARRAY_SIZE, sizeof (elem_t));
+    struct ArrStack* stack = stack_ctr ();
 
     double time_spent = 0.0;
 
-    time_spent = go_test_one (stack);
+    TEST_ONE(ArrStack, &time_spent);
 
     printf ("array_test 1: %f\n", time_spent);
     
-    time_spent = go_test_two (stack);
+    TEST_TWO(ArrStack, &time_spent);
     
     printf ("array_test 2: %f\n", time_spent);
 
-    time_spent = go_test_three (stack);
+    TEST_THREE(ArrStack, &time_spent);
     
     printf ("array_test 3: %f\n", time_spent);
 
@@ -29,7 +29,7 @@ int main()
     printf ("After running test4, the results of the work on which the next schedule was built "
     "will be recorded in a file ArrayTest4.txt\n");
 
-    test_four ();
+    TEST_FOUR(ArrStack, "./ArrayTest4.txt");
 
     return 0;
 }

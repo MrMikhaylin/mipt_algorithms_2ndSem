@@ -1,6 +1,8 @@
 #ifndef LISTSTACK_FUNC_H_
 #define LISTSTACK_FUNC_H_
 
+#include <stddef.h>
+
 typedef int elem_t;
 
 const size_t MILLION = 1000000;
@@ -20,7 +22,7 @@ struct Node
 struct ListStack
 {
     struct Node* list_head;
-    size_t capacity;
+    size_t size;
 };
 
 struct ListStack* stack_ctr ();

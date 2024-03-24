@@ -1,23 +1,4 @@
 import matplotlib.pyplot as plt
-def plot_graph(file_name, color):
-    with open(file_name, 'r') as file:
-        lines = file.readlines()
-        x = []
-        y = []
-        for line in lines:
-            data = line.split()
-            x.append(int(data[0]))
-            y.append(float(data[1]))
-
-    plt.figure()
-    plt.plot(x, y, color=color, label=file_name)
-    plt.xlabel('Количество итераций')
-    plt.ylabel('Время (с)')
-    plt.title('График данных из файла ' + file_name)
-    plt.grid(True)
-
-    plt.savefig(file_name.replace('.txt', '.png'))
-    plt.close()
 
 def plot_iterations_vs_time(file1, file2):
     # Загрузить данные из файлов
@@ -49,7 +30,5 @@ def plot_iterations_vs_time(file1, file2):
     plt.savefig('Combined.png')
     plt.close()
 
-# Создаем первый, второй графики и их объединение
-plot_graph('ArrayTest4.txt', 'blue')
-plot_graph('ListTest4.txt', 'red')
+# Создаем объединение графиков
 plot_iterations_vs_time('ArrayTest4.txt', 'ListTest4.txt')

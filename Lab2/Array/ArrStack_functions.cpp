@@ -5,15 +5,17 @@
 
 #include "ArrStack_functions.h"
 
-struct ArrStack* stack_ctr (size_t size, size_t element_size)
+struct ArrStack* stack_ctr ()
 {
     struct ArrStack* new_stack = (struct ArrStack*) calloc (1, sizeof (struct ArrStack));
     assert (new_stack != nullptr);
 
-    new_stack->capacity = size;
+    new_stack->capacity = 1;
     
-    new_stack->data = (elem_t*) calloc (size, element_size);
-    new_stack->fcp = 0;
+    new_stack->data = (elem_t*) calloc (1, sizeof (elem_t));
+    assert (new_stack->data != nullptr);
+    
+    new_stack->size = 0;
 
     return new_stack;
 }
@@ -29,9 +31,9 @@ struct ArrStack* stack_dtr (struct ArrStack* st)
 ERROR_CALL push (struct ArrStack* st, elem_t element)
 {
     assert (st != nullptr);
-    assert (st->fcp <= st->capacity);
+    assert (st->size <= st->capacity);
     
-    if (st->fcp == st->capacity)
+    if (st->size == st->capacity)
     {
         st->capacity = 2 * st->capacity;
 
@@ -39,8 +41,8 @@ ERROR_CALL push (struct ArrStack* st, elem_t element)
         assert (st->data != nullptr);
     }
 
-    st->data[st->fcp] = element;
-    st->fcp++;
+    st->data[st->size] = element;
+    st->size++;
 
     return OK;
 }
@@ -49,20 +51,20 @@ elem_t top (struct ArrStack* st)
 {
     assert (st != nullptr);
 
-    return (st->data[st->fcp - 1]);
+    return (st->data[st->size - 1]);
 }
 
 ERROR_CALL pop (struct ArrStack* st)
 {
     assert (st != nullptr);
 
-    if (st->fcp == 0)
+    if (st->size == 0)
         return ERROR;
     
     else
     {
-        st->data[st->fcp - 1] = 0;
-        st->fcp--;
+        st->data[st->size - 1] = 0;
+        st->size--;
 
         return OK;
     }
