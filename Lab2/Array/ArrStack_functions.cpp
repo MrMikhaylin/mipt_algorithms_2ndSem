@@ -63,6 +63,16 @@ ERROR_CALL pop (struct ArrStack* st)
     
     else
     {
+        if (st->size <= st->capacity/4)
+        {
+            if (st->capacity >= 100)
+            {
+                st->data = (elem_t*) realloc ((elem_t*) st->data, st->capacity*sizeof(elem_t)/2);
+
+                st->capacity = st->capacity/2;
+            }
+        }
+        
         st->data[st->size - 1] = 0;
         st->size--;
 
