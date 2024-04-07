@@ -1,0 +1,34 @@
+#ifndef ARRSTACK_FUNC_H_
+#define ARRSTACK_FUNC_H_
+
+#include <stddef.h>
+
+typedef int elem_t;
+
+const size_t MILLION = 1000000;
+
+enum ERROR_CALL
+{
+    OK = 1,
+    ERROR = 0
+};
+
+struct ArrStack
+{
+    elem_t* data;
+    size_t capacity;
+    size_t size;
+};
+
+struct ArrStack* stack_ctr ();
+
+struct ArrStack* stack_dtr (struct ArrStack* st);
+
+ERROR_CALL push (struct ArrStack* st, elem_t element);
+
+elem_t top (struct ArrStack* st);
+
+ERROR_CALL pop (struct ArrStack* st);
+
+
+#endif
