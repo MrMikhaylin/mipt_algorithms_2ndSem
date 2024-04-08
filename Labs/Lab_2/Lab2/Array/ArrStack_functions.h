@@ -5,7 +5,7 @@
 
 typedef int elem_t;
 
-const size_t MILLION = 1000000;
+#define MILLION 1000000
 
 enum ERROR_CALL
 {
@@ -15,7 +15,7 @@ enum ERROR_CALL
 
 struct ArrStack
 {
-    elem_t* data;
+    void* data;
     size_t capacity;
     size_t size;
 };
@@ -24,11 +24,11 @@ struct ArrStack* stack_ctr ();
 
 struct ArrStack* stack_dtr (struct ArrStack* st);
 
-ERROR_CALL push (struct ArrStack* st, elem_t element);
+enum ERROR_CALL push (struct ArrStack* st, elem_t element);
 
 elem_t top (struct ArrStack* st);
 
-ERROR_CALL pop (struct ArrStack* st);
+enum ERROR_CALL pop (struct ArrStack* st);
 
 
 #endif

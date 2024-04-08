@@ -7,18 +7,18 @@
 struct ListStack* stack_ctr ()
 {
     struct ListStack* new_stack = (struct ListStack*) calloc (1, sizeof (struct ListStack));
-    assert (new_stack != nullptr);
+    assert (new_stack != NULL);
     
-    new_stack->list_head = nullptr;
+    new_stack->list_head = NULL;
 
     return new_stack;
 }
 
 struct ListStack* stack_dtr (struct ListStack* st)
 {
-    assert (st != nullptr);
+    assert (st != NULL);
 
-    struct Node* temp = nullptr;
+    struct Node* temp = NULL;
 
     for (size_t i = 0; i < st->size; i++)
     {
@@ -32,16 +32,16 @@ struct ListStack* stack_dtr (struct ListStack* st)
 
     free (st);
 
-    return nullptr;
+    return NULL;
 }
 
-ERROR_CALL push (struct ListStack* st, elem_t element)
+enum ERROR_CALL push (struct ListStack* st, elem_t element)
 {
-    assert (st != nullptr);
+    assert (st != NULL);
 
     struct Node* new_node = (struct Node*) calloc (1, sizeof (struct Node));
 
-    if (new_node == nullptr)
+    if (new_node == NULL)
         return ERROR;
 
     new_node->value = element;
@@ -55,14 +55,14 @@ ERROR_CALL push (struct ListStack* st, elem_t element)
 
 elem_t top (struct ListStack* st)
 {
-    assert (st != nullptr);
+    assert (st != NULL);
 
     return st->list_head->value;
 }
 
-ERROR_CALL pop (struct ListStack* st)
+enum ERROR_CALL pop (struct ListStack* st)
 {
-    assert (st != nullptr);
+    assert (st != NULL);
 
     if (st->size == 0) 
         return ERROR;

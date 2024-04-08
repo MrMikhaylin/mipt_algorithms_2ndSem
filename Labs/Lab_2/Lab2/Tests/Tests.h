@@ -7,7 +7,7 @@
 do                                                              \
 {                                                               \
     struct T* stack = stack_ctr ();                             \
-    assert (stack != nullptr);                                  \
+    assert (stack != NULL);                                     \
                                                                 \
     elem_t element = 0;                                         \
                                                                 \
@@ -49,7 +49,7 @@ while(0)
 do                                                              \
 {                                                               \
     struct T* stack = stack_ctr ();                             \
-    assert (stack != nullptr);                                  \
+    assert (stack != NULL);                                     \
                                                                 \
     elem_t element = 0;                                         \
                                                                 \
@@ -122,7 +122,7 @@ while(0)
 do                                                              \
 {                                                               \
     struct T* stack = stack_ctr ();                             \
-    assert (stack != nullptr);                                  \
+    assert (stack != NULL);                                     \
                                                                 \
     elem_t element = 0;                                         \
                                                                 \
@@ -162,10 +162,10 @@ while(0)
 do                                                              \
 {                                                               \
     struct T* stack = stack_ctr ();                             \
-    assert (stack != nullptr);                                  \
+    assert (stack != NULL);                                     \
                                                                 \
     FILE* file = fopen (file_out, "w");                         \
-    assert (file != nullptr);                                   \
+    assert (file != NULL);                                      \
                                                                 \
     elem_t element = 0;                                         \
     size_t i = 0;                                               \

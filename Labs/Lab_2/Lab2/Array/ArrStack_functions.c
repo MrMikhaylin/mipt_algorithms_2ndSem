@@ -8,12 +8,12 @@
 struct ArrStack* stack_ctr ()
 {
     struct ArrStack* new_stack = (struct ArrStack*) calloc (1, sizeof (struct ArrStack));
-    assert (new_stack != nullptr);
+    assert (new_stack != NULL);
 
     new_stack->capacity = 1;
     
-    new_stack->data = (elem_t*) calloc (1, sizeof (elem_t));
-    assert (new_stack->data != nullptr);
+    new_stack->data = (void*) calloc (1, sizeof (elem_t));
+    assert (new_stack->data != NULL);
     
     new_stack->size = 0;
 
@@ -25,12 +25,12 @@ struct ArrStack* stack_dtr (struct ArrStack* st)
     free (st->data);
     free (st);
     
-    return nullptr;
+    return NULL;
 }
 
-ERROR_CALL push (struct ArrStack* st, elem_t element)
+enum ERROR_CALL push (struct ArrStack* st, elem_t element)
 {
-    assert (st != nullptr);
+    assert (st != NULL);
     assert (st->size <= st->capacity);
     
     if (st->size == st->capacity)
@@ -38,10 +38,10 @@ ERROR_CALL push (struct ArrStack* st, elem_t element)
         st->capacity = 2 * st->capacity;
 
         st->data = (elem_t*) realloc((elem_t*) st->data, st->capacity * sizeof(elem_t));
-        assert (st->data != nullptr);
+        assert (st->data != NULL);
     }
 
-    st->data[st->size] = element;
+    ((elem_t*) st->data)[st->size] = element;
     st->size++;
 
     return OK;
@@ -49,14 +49,14 @@ ERROR_CALL push (struct ArrStack* st, elem_t element)
 
 elem_t top (struct ArrStack* st)
 {
-    assert (st != nullptr);
+    assert (st != NULL);
 
-    return (st->data[st->size - 1]);
+    return (((elem_t*) st->data)[st->size - 1]);
 }
 
-ERROR_CALL pop (struct ArrStack* st)
+enum ERROR_CALL pop (struct ArrStack* st)
 {
-    assert (st != nullptr);
+    assert (st != NULL);
 
     if (st->size == 0)
         return ERROR;
@@ -68,12 +68,13 @@ ERROR_CALL pop (struct ArrStack* st)
             if (st->capacity >= 100)
             {
                 st->data = (elem_t*) realloc ((elem_t*) st->data, st->capacity*sizeof(elem_t)/2);
+                assert (st->data != NULL);
 
                 st->capacity = st->capacity/2;
             }
         }
         
-        st->data[st->size - 1] = 0;
+        ((elem_t*) st->data)[st->size - 1] = 0;
         st->size--;
 
         return OK;
