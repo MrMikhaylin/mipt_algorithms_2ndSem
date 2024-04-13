@@ -26,7 +26,7 @@ struct ArrStack* stack_dtr (struct ArrStack* st);
 
 enum ERROR_CALL push (struct ArrStack* st, elem_t element);
 
-elem_t top (struct ArrStack* st);
+elem_t top (const struct ArrStack* st);
 
 enum ERROR_CALL pop (struct ArrStack* st);
 

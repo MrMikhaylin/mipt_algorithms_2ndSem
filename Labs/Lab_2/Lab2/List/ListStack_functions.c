@@ -53,7 +53,7 @@ enum ERROR_CALL push (struct ListStack* st, elem_t element)
     return OK;
 }
 
-elem_t top (struct ListStack* st)
+elem_t top (const struct ListStack* st)
 {
     assert (st != NULL);
 

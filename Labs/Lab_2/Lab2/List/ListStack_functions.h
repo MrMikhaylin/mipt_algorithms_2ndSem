@@ -31,7 +31,7 @@ struct ListStack* stack_dtr (struct ListStack* st);
 
 enum ERROR_CALL push (struct ListStack* st, elem_t element);
 
-elem_t top (struct ListStack* st);
+elem_t top (const struct ListStack* st);
 
 enum ERROR_CALL pop (struct ListStack* st);
 
