@@ -15,7 +15,7 @@ enum ERROR_CALL
 
 struct Node
 {
-    elem_t value;
+    void* value;
     struct Node* next_node;
 };
 
@@ -29,7 +29,7 @@ struct ListStack* stack_ctr ();
 
 struct ListStack* stack_dtr (struct ListStack* st);
 
-enum ERROR_CALL push (struct ListStack* st, elem_t element);
+enum ERROR_CALL push (struct ListStack* st, void* element);
 
 elem_t top (const struct ListStack* st);
 

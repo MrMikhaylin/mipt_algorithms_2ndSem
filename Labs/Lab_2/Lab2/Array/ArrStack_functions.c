@@ -30,7 +30,7 @@ struct ArrStack* stack_dtr (struct ArrStack* st)
     return NULL;
 }
 
-enum ERROR_CALL push (struct ArrStack* st, elem_t element)
+enum ERROR_CALL push (struct ArrStack* st, void* element)
 {
     assert (st != NULL);
     assert (st->size <= st->capacity);
@@ -39,11 +39,11 @@ enum ERROR_CALL push (struct ArrStack* st, elem_t element)
     {
         st->capacity = 2 * st->capacity;
 
-        st->data = (elem_t*) realloc((elem_t*) st->data, st->capacity * sizeof(elem_t));
+        st->data = (void*) realloc((elem_t*) st->data, st->capacity * sizeof(elem_t));
         assert (st->data != NULL);
     }
 
-    ((elem_t*) st->data)[st->size] = element;
+    ((elem_t*) st->data)[st->size] = *((elem_t*) element);
     st->size++;
 
     return OK;
@@ -67,7 +67,7 @@ enum ERROR_CALL pop (struct ArrStack* st)
     {
         if (st->size <= st->capacity/4)
         {
-            st->data = (elem_t*) realloc ((elem_t*) st->data, st->capacity*sizeof(elem_t)/2);
+            st->data = (void*) realloc ((elem_t*) st->data, st->capacity*sizeof(elem_t)/2);
             assert (st->data != NULL);
 
             st->capacity = st->capacity/2;

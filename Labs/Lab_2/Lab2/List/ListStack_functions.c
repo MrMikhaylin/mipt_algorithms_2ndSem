@@ -35,7 +35,7 @@ struct ListStack* stack_dtr (struct ListStack* st)
     return NULL;
 }
 
-enum ERROR_CALL push (struct ListStack* st, elem_t element)
+enum ERROR_CALL push (struct ListStack* st, void* element)
 {
     assert (st != NULL);
 
@@ -44,7 +44,7 @@ enum ERROR_CALL push (struct ListStack* st, elem_t element)
     if (new_node == NULL)
         return ERROR;
 
-    new_node->value = element;
+    new_node->value = (elem_t*) element;
     new_node->next_node = st->list_head;
     
     st->size++;
@@ -57,7 +57,7 @@ elem_t top (const struct ListStack* st)
 {
     assert (st != NULL);
 
-    return st->list_head->value;
+    return *((elem_t*) st->list_head->value);
 }
 
 enum ERROR_CALL pop (struct ListStack* st)

@@ -17,7 +17,7 @@ do                                                              \
     {                                                           \
         element = (rand()%(2000001)*100)/13;                    \
                                                                 \
-        push (stack, element);                                  \
+        push (stack, &element);                                 \
     }                                                           \
                                                                 \
     for (size_t i = 0; i < 9; i++)                              \
@@ -33,7 +33,7 @@ do                                                              \
         {                                                       \
             element = (rand()%(2000001)*100)/13;                \
                                                                 \
-            push (stack, element);                              \
+            push (stack, &element);                              \
         }                                                       \
     }                                                           \
                                                                 \
@@ -59,7 +59,7 @@ do                                                              \
     {                                                           \
         element = (rand()%(2000001)*100)/13;                    \
                                                                 \
-        push (stack, element);                                  \
+        push (stack, &element);                                 \
     }                                                           \
                                                                 \
     for (size_t i = 0; i < 100; i++)                            \
@@ -73,7 +73,7 @@ do                                                              \
         {                                                       \
             element = (rand()%(2000001)*100)/13;                \
                                                                 \
-            push (stack, element);                              \
+            push (stack, &element);                             \
         }                                                       \
     }                                                           \
                                                                 \
@@ -90,7 +90,7 @@ do                                                              \
         {                                                       \
             element = (rand()%(2000001)*100)/13;                \
                                                                 \
-            push (stack, element);                              \
+            push (stack, &element);                             \
         }                                                       \
     }                                                           \
                                                                 \
@@ -105,7 +105,7 @@ do                                                              \
         {                                                       \
             element = (rand()%(2000001)*100)/13;                \
                                                                 \
-            push (stack, element);                              \
+            push (stack, &element);                             \
         }                                                       \
     }                                                           \
                                                                 \
@@ -130,7 +130,7 @@ do                                                              \
     {                                                           \
         element = (rand()%(2000001)*100)/13;                    \
                                                                 \
-        push (stack, element);                                  \
+        push (stack, &element);                                 \
     }                                                           \
                                                                 \
     clock_t begin = clock ();                                   \
@@ -145,7 +145,7 @@ do                                                              \
         {                                                       \
             element = (rand()%(2000001)*100)/13;                \
                                                                 \
-            push (stack, element);                              \
+            push (stack, &element);                             \
         }                                                       \
                                                                 \
         else                                                    \
@@ -177,7 +177,7 @@ do                                                              \
     {                                                           \
         for (int j = 0; j < 1000; j++)                          \
         {                                                       \
-            assert (push (stack, j) == OK);                     \
+            assert (push (stack, &j) == OK);                    \
                                                                 \
             i++;                                                \
         }                                                       \
