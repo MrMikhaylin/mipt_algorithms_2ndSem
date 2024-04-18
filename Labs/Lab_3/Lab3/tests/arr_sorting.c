@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
-int comparator (const void* first, const void* second)
+int int_comparator (const void* first, const void* second)
 {
     const int* a = (const int*) first;
     const int* b = (const int*) second;
@@ -18,10 +19,12 @@ int comparator (const void* first, const void* second)
 
 int main()
 {
-    size_t arrlenght = 0;
-    scanf ("%zu", &arrlenght);
+    size_t arr_length = 0;
+    assert (scanf ("%zu", &arr_length) != NULL);
 
-    int* array = (int*) calloc (arrlenght, sizeof (int));
+    int* array = (int*) calloc (arr_length, sizeof (int));
+    assert (array != NULL);
+
     int size = 0;
 
     int temp = 0;
@@ -32,11 +35,11 @@ int main()
         size++;
     }
 
-    qsort (array, arrlenght, sizeof (int), comparator);
+    qsort (array, arr_length, sizeof (int), int_comparator);
 
-    printf ("%zu\n", arrlenght);
+    printf ("%zu\n", arr_length);
 
-    for (size_t i = 0; i < arrlenght; i++)
+    for (size_t i = 0; i < arr_length; i++)
     {
         printf ("%d ", array[i]);
     }

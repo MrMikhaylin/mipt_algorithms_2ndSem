@@ -1,5 +1,5 @@
-#ifndef TESTING_H
-#define TESTING_H
+#ifndef _TESTING_H
+#define _TESTING_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,7 +13,7 @@ const double BILLION = 1000000000.0;
 const size_t NAME_LENGHT = 120;
 const size_t BLOCK_LENGHT = 5;
 
-double* RunTests (const char* TestsPath, void* SortingFunction, const char* ResultsPath, size_t from, size_t to, size_t step)
+double* run_tests (const char* TestsPath, void* SortingFunction, const char* ResultsPath, size_t from, size_t to, size_t step)
 {
     assert ((TestsPath != NULL) && (ResultsPath != NULL) && (SortingFunction != NULL));
     
@@ -40,7 +40,7 @@ double* RunTests (const char* TestsPath, void* SortingFunction, const char* Resu
     int blocktime_ind = 0;
     assert (blocktime != NULL);
     
-    size_t arrlenght = 0; //размер массива сортировки
+    size_t arrlength = 0; //размер массива сортировки
     int temp = 0;
 
     void (*Sort) (int*, size_t) = (void (*) (int*, size_t)) SortingFunction;
@@ -48,9 +48,6 @@ double* RunTests (const char* TestsPath, void* SortingFunction, const char* Resu
     for (size_t i = from; i <= to; i += step)  //перебор по всем размерам 
     {
         double average_time = 0;
-
-        struct timespec start = {};
-        struct timespec end = {};
         
         for (size_t j = 0; j < BLOCK_LENGHT; j++)  // перебор по каждой пятерке
         {
@@ -61,39 +58,36 @@ double* RunTests (const char* TestsPath, void* SortingFunction, const char* Resu
             FILE* file_out = fopen (filename_out, "r");
             assert ((file_in != NULL) && (file_out != NULL));
 
-            fscanf (file_in, "%zu", &arrlenght);
+            fscanf (file_in, "%zu", &arrlength);
 
-            int* sorting_array = (int*) calloc (arrlenght, sizeof (int));
+            int* sorting_array = (int*) calloc (arrlength, sizeof (int));
             assert (sorting_array != NULL);
             
-            for (size_t m = 0; m < arrlenght; m++)
+            for (size_t m = 0; m < arrlength; m++)
             {
                 fscanf (file_in, "%d", &sorting_array[m]);
             }
 
             fscanf (file_out, "%d", &temp);
 
-            if (arrlenght != (size_t) temp)
+            if (arrlength != (size_t) temp)
                 assert (false);
 
-            clock_gettime (CLOCK_REALTIME, &start);
+            clock_t begin = clock ();
 
-            //int* buf = (int*) calloc (arrlenght, sizeof (int));
+            Sort (sorting_array, arrlength);
 
-            Sort (sorting_array, arrlenght);
+            clock_t end = clock ();
 
-            //free (buf);
+            double time_point = (double) (end - begin)/CLOCKS_PER_SEC;
 
-            clock_gettime (CLOCK_REALTIME, &end);
+            blocktime[blocktime_ind++] = time_point;
 
-            blocktime[blocktime_ind++] = end.tv_sec - start.tv_sec + (end.tv_nsec - start.tv_nsec) / BILLION;  
-
-            for (size_t k = 0; k < arrlenght; k++)
+            for (size_t k = 0; k < arrlength; k++)
             {
                 fscanf (file_out, "%d", &temp);
                 
-                if (sorting_array[k] != temp)
-                    assert (false);
+                assert (sorting_array[k] == temp);
             }
 
             free (sorting_array);
