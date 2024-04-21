@@ -29,7 +29,6 @@
 *.dylib
 
 # Executables
-*.json
 *.exe
 *.out
 *.app
@@ -42,6 +41,9 @@
 *.su
 *.idb
 *.pdb
+
+# Ignore 
+*.json
 
 # Kernel Module Compile Results
 *.mod*
