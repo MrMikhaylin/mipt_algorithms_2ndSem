@@ -52,7 +52,7 @@ void heap_sort (int* array, size_t arr_length, size_t k)
     if (arr_length == 0)
         return;
 
-    for (int index = ((int) arr_length) - 1; index >= 0; index--)
+    for (int index = ((int) arr_length)/2 - 1; index >= 0; index--)
         sift_down (heap, (size_t) index, k);
 
     while (heap->size > 0)

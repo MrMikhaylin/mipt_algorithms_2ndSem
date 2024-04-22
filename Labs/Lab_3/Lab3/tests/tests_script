@@ -1,7 +1,7 @@
 #!/bin/bash
 
 very_small_tests="very_small_tests"
-small_tests="small_tests"./
+small_tests="small_tests"
 big_tests="big_tests"
 dub_tests="tests_most_duplicates"
 

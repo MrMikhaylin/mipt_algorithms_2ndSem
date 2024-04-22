@@ -43,7 +43,7 @@ double* run_tests (const char* TestsPath, void* SortingFunction, const char* Res
     size_t arrlength = 0; //размер массива сортировки
     int temp = 0;
 
-    void (*Sort) (int*, size_t) = (void (*) (int*, size_t)) SortingFunction;
+    void (*Sort) (int*, size_t, size_t) = (void (*) (int*, size_t, size_t)) SortingFunction;
 
     for (size_t i = from; i <= to; i += step)  //перебор по всем размерам 
     {
@@ -75,7 +75,7 @@ double* run_tests (const char* TestsPath, void* SortingFunction, const char* Res
 
             clock_t begin = clock ();
 
-            Sort (sorting_array, arrlength);
+            Sort (sorting_array, arrlength, 6);
 
             clock_t end = clock ();
 
