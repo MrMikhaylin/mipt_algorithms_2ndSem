@@ -6,10 +6,7 @@
 
 int int_comparator (const void* first, const void* second) 
 {
-    const int* a = (const int*) first;
-    const int* b = (const int*) second;
-
-    return (*a == *b) ? 0 : (*a < *b) ? -1 : 1;
+    return (*((const int*)first) > *((const int*)second)) - (*((const int*)second) > *((const int*)first));
 }
 
 void lib_qsort (int* array, size_t arr_length)
