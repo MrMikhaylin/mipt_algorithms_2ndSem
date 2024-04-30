@@ -4,10 +4,16 @@
 #include <stdbool.h>
 #include <assert.h>
 
-#define MIN_CAP 10
+#define NEW_CAP 10
 #define MIN_LEN 10
 
-typedef int elem_t; 
+typedef int elem_t;
+
+enum ERROR
+{
+    OK = 1,
+    FAULT = 0
+};
 
 struct stack
 {
@@ -16,12 +22,12 @@ struct stack
     size_t capacity;
 };
 
-struct stack* stack_ctor (size_t elem_size)
+struct stack* stack_ctor (size_t elem_size, size_t new_capacity)
 {
     struct stack* stk = (struct stack*) calloc (1, sizeof (struct stack));
     assert (stk != NULL);
 
-    stk->capacity = MIN_CAP;
+    stk->capacity = new_capacity;
     stk->size = 0;
     
     stk->data = (void*) calloc (stk->capacity, elem_size);
@@ -46,13 +52,15 @@ void stack_push (struct stack* stk, elem_t number)
     stk->size++;
 }
 
-void stack_pop (struct stack* stk, elem_t* number)
+enum ERROR stack_pop (struct stack* stk, elem_t* number)
 {
     assert (stk != NULL);
 
+    if (stk->size <= 0)
+        return FAULT;
+
     if (stk->size <= stk->capacity/4)
     {
-        
         stk->data = (void*) realloc ((elem_t*) stk->data, stk->capacity * sizeof (elem_t)/2);
         assert (stk->data != NULL);
 
@@ -67,7 +75,9 @@ void stack_pop (struct stack* stk, elem_t* number)
     }
 
     else
-        assert (false);
+        return FAULT;
+
+    return OK;
 }
 
 void stack_clear (struct stack* stk)
@@ -82,12 +92,16 @@ void stack_clear (struct stack* stk)
     }
 }
 
-void stack_back (struct stack* stk, elem_t* number)
+enum ERROR stack_back (struct stack* stk, elem_t* number)
 {
     assert (stk != NULL);
-    assert (stk->size > 0);
+    
+    if (stk->size <= 0)
+        return FAULT;
 
     *number = ((elem_t*) (stk->data))[stk->size - 1];
+
+    return OK;
 }
 
 bool match_command (struct stack* stk, char* command, FILE* file_out)
@@ -107,28 +121,22 @@ bool match_command (struct stack* stk, char* command, FILE* file_out)
 
     if ((strcmp (command, "pop")) == 0)
     {
-        if (stk->size == 0)
-            fprintf (file_out, "error\n");
-                
-        else
-        {
-            stack_pop (stk, &number);
+        if (stack_pop (stk, &number))
             fprintf (file_out, "%d\n", number);
-        }
-
+        
+        else
+            fprintf (file_out, "error\n");
+        
         return true;
     }
 
     if ((strcmp (command, "back")) == 0)
     {
-        if ((stk->size) == 0)
-            fprintf (file_out, "error\n");
-                    
-        else
-        {
-            stack_back (stk, &number);
+        if (stack_back (stk, &number))
             fprintf (file_out, "%d\n", number);
-        }
+        
+        else
+            fprintf (file_out, "error\n");
 
         return true;
     }
@@ -156,9 +164,15 @@ bool match_command (struct stack* stk, char* command, FILE* file_out)
     }
 }
 
+void stack_dtor (struct stack* stk)
+{
+    free (stk->data);
+    free (stk);
+}
+
 int main()
 {
-    struct stack* stk = stack_ctor (sizeof (elem_t));
+    struct stack* stk = stack_ctor (sizeof (elem_t), NEW_CAP);
 
     char* command = (char*) calloc (MIN_LEN, sizeof (char));
     assert (command != NULL);
@@ -172,8 +186,8 @@ int main()
             break;
     }
 
+    stack_dtor (stk);
     free (command);
-    free (stk);
 
     fclose (file_out);
     
