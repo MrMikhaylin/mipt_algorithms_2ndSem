@@ -61,7 +61,7 @@ void run_avl_tests (const char* TestsPath, const char* ResultsPathInsertion, con
     {       
         for (size_t j = 0; j < BLOCK_LENGHT; j++)                         // перебор по каждой пятерке
         {
-            snprintf (filename_data, NAME_LENGHT, "%s%zu_%zu", TestsPath, i, j);
+            snprintf (filename_data, NAME_LENGHT, "%s%zu_%zu.sorted", TestsPath, i, j);
     
             FILE* file_in = fopen (filename_data, "r");
             assert (file_in != NULL);
@@ -116,8 +116,8 @@ void run_avl_tests (const char* TestsPath, const char* ResultsPathInsertion, con
         average_insertion /= BLOCK_LENGHT;
         average_deleting /= BLOCK_LENGHT;
 
-        fprintf (insert_result, "%d %f\n", i, average_insertion);
-        fprintf (delete_result, "%d %f\n", i, average_deleting);
+        fprintf (insert_result, "%d %f\n", average_insertion);
+        fprintf (delete_result, "%d %f\n", average_deleting);
         blocktime_ind = 0;
     }
 
