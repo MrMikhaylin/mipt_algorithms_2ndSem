@@ -56,18 +56,19 @@ void run_bst_tests (const char* TestsPath, const char* ResultsPath, size_t arr_l
         FILE* file_in = fopen (filename_data, "r");
         assert (file_in != NULL);
 
-        fscanf (file_in, "%zu", &value);
+        fscanf (file_in, "%zu\n", &value);
         assert (value == arr_length);
 
         BSTNode* tree = NULL;
+        int* nums = (int*) calloc (value, sizeof (int));
+        assert (nums != NULL);
 
         clock_t begin_insertion = clock ();
 
-        for (int i = 0; i < arr_length; i++)
+        for (int k = 0; k < arr_length; k++)
         {
-            fscanf (file_in, "%d ", &value);
-
-            tree = insert_number (tree, value);
+            fscanf (file_in, "%d ", &nums[k]);
+            tree = insert_number (tree, nums[k]);
         }
 
         clock_t end_insertion = clock ();
@@ -76,9 +77,9 @@ void run_bst_tests (const char* TestsPath, const char* ResultsPath, size_t arr_l
 
         clock_t begin_deleting = clock ();
 
-        for (int i = 0; i < arr_length/2; i++)
+        for (int m = 0; m < arr_length/2; m++)
         {    
-            tree = delete_number (tree, tree->key);
+            tree = delete (tree, nums, arr_length);
         }
 
         clock_t end_deleting = clock ();
@@ -92,6 +93,7 @@ void run_bst_tests (const char* TestsPath, const char* ResultsPath, size_t arr_l
         memset (filename_data, '0', NAME_LENGHT);
         delete_tree (tree);    
         fclose (file_in);
+        free (nums);
     }
 
     for (size_t t = 0; t < BLOCK_LENGHT; t++)

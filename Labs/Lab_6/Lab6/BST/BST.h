@@ -24,6 +24,8 @@ BSTNode* find_node (BSTNode* tree, int value);
 
 BSTNode* get_top (BSTNode* node);
 
+BSTNode* delete (BSTNode* tree, int* nums, size_t arr_length);
+
 void delete_tree (BSTNode* node);
 
 

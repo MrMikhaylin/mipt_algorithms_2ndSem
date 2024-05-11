@@ -54,6 +54,10 @@ BSTNode* delete_number (BSTNode* tree, int value)
     assert (tree != NULL);
 
     BSTNode* deleted_node = find_node (tree, value);
+
+    if (deleted_node == NULL)
+        return tree;
+
     BSTNode* new = find_min (deleted_node->right);
     BSTNode* ans = NULL;
 
@@ -170,4 +174,20 @@ void delete_tree (BSTNode* node)
     delete_tree (node->right);
 
     free (node);
+}
+
+BSTNode* delete (BSTNode* tree, int* nums, size_t arr_length)
+{
+    int index = rand() % arr_length;
+
+    if (nums[index] != -1)
+    {
+        BSTNode* ans = delete_number (tree, nums[index]);
+        nums[index] = -1;
+        
+        return ans;
+    }
+
+    else
+        return delete (tree, nums, arr_length);
 }
