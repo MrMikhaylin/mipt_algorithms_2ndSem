@@ -7,6 +7,9 @@
 #define NEW_CAP 10
 #define MIN_LEN 10
 
+#define STRLEN_(x) #x
+#define STRLEN(x) STRLEN_(x)
+
 typedef int elem_t;
 
 enum ERROR
@@ -103,7 +106,7 @@ enum ERROR stack_back (struct stack* stk, elem_t* number)
 
 bool match_command (struct stack* stk, char* command, FILE* file_out)
 {
-    int control_s = scanf ("%10s", command);
+    int control_s = scanf ("%" STRLEN(MIN_LEN) "s", command);
     assert (control_s);
     elem_t number = 0;
 
