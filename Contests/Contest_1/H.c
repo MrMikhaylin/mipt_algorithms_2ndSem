@@ -11,68 +11,93 @@ void swap (int* value_a, int* value_b)
     *value_b = temporary;
 }
 
-int hoar_partition (int* array, int l, int r)
+size_t hoar_partition (int* array, size_t left, size_t right)
 {
     assert (array != NULL);
 
-    int piv_idx = l + (r - l)/2;
+    size_t piv_idx = left + (right - left)/2;
     int pivot = array[piv_idx];
     
-    int i = l;
-    int j = r;
+    size_t ind_i = left;
+    size_t ind_j = right;
     
-    while ( i <= j )
+    while (ind_i <= ind_j)
     {
-        while (array[i] < pivot)
+        while (array[ind_i] < pivot)
         {
-            i++;
+            ind_i++;
         }
-        while (array[j] > pivot)
+        while (array[ind_j] > pivot)
         {
-            j--;
+            ind_j--;
         }
         
-        if (i >= j)
-            return j;
+        if (ind_i >= ind_j)
+            return ind_j;
         
-        swap (&array[i++], &array[j--]);
+        swap (&array[ind_i++], &array[ind_j--]);
     }
 
-    return j;
+    return ind_j;
 }
 
-void Sort (int* array, int left, int right)
+void Sort (int* array, size_t left, size_t right)
 {
     assert (array != NULL);
     
     if (&array[right] - &array[left] == 0)
         return;
     
-    int pivot_index = hoar_partition (array, left, right);
+    size_t pivot_index = hoar_partition (array, left, right);
 
     Sort (array, pivot_index + 1, right);
     Sort (array, left, pivot_index);
 }
 
+void data_in (int* array, size_t arrlength)
+{
+    assert (array != NULL);
+
+    for (int i = 0; i < arrlength; i++)
+    {
+        scanf ("%d", &array[i]);
+    }
+}
+
+void data_out (int* array, size_t arrlength)
+{
+    assert (array != NULL);
+
+    for (int i = 0; i < arrlength; i++)
+    {
+        printf ("%d ", array[i]);
+    }
+}
+
 int main()
 {
-    int N = 0;
-    scanf ("%d", &N);
+    size_t N = 0;
+    int control = scanf ("%zu", &N);
+    if (!control)
+    {
+        printf ("Seek mistake in scanning array length\n");
+
+        return 0;
+    }
 
     int* data = (int*) calloc (N, sizeof (int));
-    assert (data != NULL);
-
-    for (int i = 0; i < N; i++)
+    if (!data)
     {
-        scanf ("%d", &data[i]);
+        printf ("Seek mistake in memory allocation\n");
+
+        return 0;
     }
+
+    data_in (data, N);
 
     Sort (data, 0, N - 1);
 
-    for (int i = 0; i < N; i++)
-    {
-        printf ("%d ", data[i]);
-    }
+    data_out (data, N);
 
     free (data);
 
