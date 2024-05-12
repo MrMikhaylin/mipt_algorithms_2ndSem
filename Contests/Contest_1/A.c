@@ -103,12 +103,14 @@ enum ERROR stack_back (struct stack* stk, elem_t* number)
 
 bool match_command (struct stack* stk, char* command, FILE* file_out)
 {
-    assert (scanf ("%s", command));
+    int control_s = scanf ("%10s", command);
+    assert (control_s);
     elem_t number = 0;
 
     if ((strcmp (command, "push")) == 0)
     {
-        assert (scanf ("%d", &number));
+        int control_d = scanf ("%d", &number);
+        assert (control_d);
 
         stack_push (stk, number);
         fprintf (file_out, "ok\n");
