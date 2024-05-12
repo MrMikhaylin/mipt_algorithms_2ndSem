@@ -3,38 +3,45 @@
 #include <string.h>
 #include <assert.h>
 
-const int DATA_MAX_SIZE = 100000;
+#define DATA_MAX_SIZE 100000
+#define MIN_LEN 15
+
+#define STRLEN_(x) #x
+#define STRLEN(x) STRLEN_(x)
+
+typedef struct Node Node;
+typedef struct Heap Heap;
 
 struct Node
 {
     long value;
-    int request;
+    size_t request;
 };
 
 struct Heap
 {
-    struct Node* data;
-    int size;
+    Node* data;
+    size_t size;
 };
 
-struct Heap* HeapCtor ()
+Heap* HeapCtor ()
 {
-    struct Heap* heap = (struct Heap*) calloc (1, sizeof (struct Heap));
+    Heap* heap = (Heap*) calloc (1, sizeof (Heap));
     assert (heap != NULL);
 
     heap->size = 0;
-    heap->data = (struct Node*) calloc (DATA_MAX_SIZE, sizeof (struct Node));
+    heap->data = (Node*) calloc (DATA_MAX_SIZE, sizeof (Node));
     assert (heap->data != NULL);
 
     return heap;
 }
 
-void swap (struct Heap* heap, int parent, int index)
+void swap (Heap* heap, size_t parent, size_t index)
 {
     assert (heap != NULL);
 
     long temporary_value = heap->data[parent].value;
-    int temporary_request = heap->data[parent].request;
+    size_t temporary_request = heap->data[parent].request;
 
     heap->data[parent].request = heap->data[index].request;
     heap->data[parent].value = heap->data[index].value;
@@ -43,13 +50,28 @@ void swap (struct Heap* heap, int parent, int index)
     heap->data[index].value = temporary_value;
 }
 
-void sift_up (struct Heap* heap, int index)
+size_t get_parent (size_t index)
+{
+    return (index - 1)/2;
+}
+
+size_t get_left_child (size_t index)
+{
+    return 2 * index + 1;
+}
+
+size_t get_right_child (size_t index)
+{
+    return 2 * index + 2;
+}
+
+void sift_up (Heap* heap, size_t index)
 {
     assert (heap != NULL);
 
     while (index > 0)
     {
-        int parent = (index - 1)/2;
+        size_t parent = get_parent (index);
 
         if (heap->data[parent].value > heap->data[index].value)
         {
@@ -62,7 +84,7 @@ void sift_up (struct Heap* heap, int index)
     }
 }
 
-void sift_down (struct Heap* heap, int index)
+void sift_down (Heap* heap, size_t index)
 {
     assert (heap != NULL);
 
@@ -71,8 +93,8 @@ void sift_down (struct Heap* heap, int index)
     while (index < heap->size)
     {
         i_min = index;
-        int left_child = 2*index + 1;
-        int right_child = 2*index + 2;
+        size_t left_child = get_left_child (index);
+        size_t right_child = get_right_child (index);
         
         if  ((left_child < heap->size) && (heap->data[left_child].value < heap->data[i_min].value))
             i_min = left_child;
@@ -88,7 +110,7 @@ void sift_down (struct Heap* heap, int index)
     }
 }
 
-void insert (struct Heap* heap, long value, int request)
+void insert (Heap* heap, long value, size_t request)
 {
     assert (heap != NULL);
 
@@ -99,14 +121,14 @@ void insert (struct Heap* heap, long value, int request)
     sift_up (heap, heap->size - 1);
 }
 
-void getMin (struct Heap* heap, FILE* file)
+void getMin (Heap* heap, FILE* file)
 {
     assert ((heap != NULL) && (file != NULL));
 
     fprintf (file, "%ld\n", heap->data[0].value);
 }
 
-void extractMin (struct Heap* heap)
+void extractMin (Heap* heap)
 {
     assert (heap != NULL);
 
@@ -121,11 +143,11 @@ void extractMin (struct Heap* heap)
     sift_down (heap, 0);
 }
 
-void decreaseKey (struct Heap* heap, int delta, int request)
+void decreaseKey (struct Heap* heap, int delta, size_t request)
 {
     assert (heap != NULL);
 
-    for (int i = 0; i < heap->size; i++)
+    for (size_t i = 0; i < heap->size; i++)
     {
         if (heap->data[i].request == request)
         {
@@ -137,7 +159,7 @@ void decreaseKey (struct Heap* heap, int delta, int request)
     }
 }
 
-void HeapDtor (struct Heap* heap)
+void HeapDtor (Heap* heap)
 {
     assert (heap != NULL);
     
@@ -145,59 +167,71 @@ void HeapDtor (struct Heap* heap)
     free (heap);
 }
 
+void match_heap (Heap* heap, size_t num_of_request, char* command, FILE* dst)
+{
+    int number = 0;
+    int delta = 0;
+
+    for (size_t request = 1; request <= num_of_request; request++)
+    {
+        scanf ("%" STRLEN(MIN_LEN) "s", command);
+
+        if (strcmp ("insert", command) == 0)
+        {
+            int contr = scanf ("%d", &number);
+            assert (contr);
+
+            insert (heap, number, request);
+
+            continue;
+        }
+        
+        if (strcmp ("getMin", command) == 0)
+        {
+            getMin (heap, dst);
+            
+            continue;
+        }
+
+        if (strcmp ("extractMin", command) == 0)
+        {
+            extractMin (heap);
+
+            continue;
+        }
+                
+        if (strcmp ("decreaseKey", command) == 0)
+        {
+            int contr = scanf ("%d %d", &number, &delta);
+            assert (contr == 2);
+            
+            decreaseKey (heap, delta, number);
+
+            continue;
+        }
+
+        else
+            printf ("Seek mistake in scanning\n");
+    }
+}
+
 int main()
 {
     int q = 0;
-    scanf ("%d", &q);
+    int control_q = scanf ("%d", &q);
+    assert (control_q);
 
-    char* command = (char*) calloc (15, sizeof (char));
+    char* command = (char*) calloc (MIN_LEN, sizeof (char));
     assert (command != NULL);
     
     FILE* dst = fopen ("output.txt", "w");
     assert ((dst != NULL) && (command != NULL));
-    
-    int number = 0;
-    int delta = 0;
 
     struct Heap* heap = HeapCtor ();
-
-    for (int request = 1; request <= q; request++)
-    {
-        scanf ("%s", command);
-
-        if (strcmp ("insert", command) == 0)
-        {
-            scanf ("%d", &number);
-
-            insert (heap, number, request);
-        }
-
-        else
-        {
-            if (strcmp ("getMin", command) == 0)
-                getMin (heap, dst);
-            
-            else
-            {
-                if (strcmp ("extractMin", command) == 0)
-                    extractMin (heap);
-                
-                else
-                {
-                    if (strcmp ("decreaseKey", command) == 0)
-                    {
-                        scanf ("%d %d", &number, &delta);
-                        
-                        decreaseKey (heap, delta, number);
-                    }
-                }
-            }
-        }
-    }
-
+    match_heap (heap, q, command, dst);
+    
     HeapDtor (heap);
     free (command);
-
     fclose (dst);
 
     return 0;
