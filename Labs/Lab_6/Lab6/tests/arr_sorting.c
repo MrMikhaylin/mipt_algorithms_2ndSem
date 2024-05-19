@@ -20,7 +20,8 @@ int int_comparator (const void* first, const void* second)
 int main()
 {
     size_t arr_length = 0;
-    assert (scanf ("%zu", &arr_length) != NULL);
+    int check = scanf ("%zu", &arr_length);
+    assert (check != NULL);
 
     int* array = (int*) calloc (arr_length, sizeof (int));
     assert (array != NULL);

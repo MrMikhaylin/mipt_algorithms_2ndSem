@@ -4,6 +4,26 @@
 
 #include "AVL.h"
 
+int height (AVLNode* node);
+
+int max (int a, int b);
+
+void update_height (AVLNode* node);
+
+int get_balance (AVLNode* node);
+
+AVLNode* construct_node (int key);
+
+AVLNode* rotate_right (AVLNode* node1);
+
+AVLNode* rotate_left (AVLNode* node1);
+
+AVLNode* find_min (AVLNode* curr_node);
+
+AVLNode* exists (AVLNode* tree, int value);
+
+
+
 int height (AVLNode* node)
 {
     if (node == NULL)
@@ -166,7 +186,7 @@ AVLNode* delete_number (AVLNode* tree, int value)
 {
     assert (tree != NULL);
 
-    AVLNode* deleted_node = find_node (tree, value);
+    AVLNode* deleted_node = exists (tree, value);
     
     if (deleted_node == NULL)
         return tree;
@@ -246,21 +266,20 @@ AVLNode* delete_number (AVLNode* tree, int value)
     return make_balance (deleted_node);
 }
 
-AVLNode* find_node (AVLNode* tree, int value)
+AVLNode* exists (AVLNode* tree, int value)
 {
-    if (tree == NULL)
-        return NULL;
+    AVLNode* curr_node = tree;
     
-    while (tree != NULL)
+    while (curr_node != NULL)
     {
-        if (tree->key == value)
-            return tree;
+        if (curr_node->key == value)
+            return curr_node;
 
-        if (value < tree->key)
-            tree = tree->left;
+        if (value < curr_node->key)
+            curr_node = curr_node->left;
         
         else
-            tree = tree->right;
+            curr_node = curr_node->right;
     }
 
     return NULL;

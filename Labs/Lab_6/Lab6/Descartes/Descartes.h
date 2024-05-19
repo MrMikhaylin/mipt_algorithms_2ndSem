@@ -27,20 +27,17 @@ typedef struct TreePair
     TreapNode* second;
 }TreePair;
 
-TreapNode* construct_node (int new_value, int new_priority);
-
-TreePair split (TreapNode* tree, int key);
-
-TreapNode* merge (TreapNode* t1, TreapNode* t2);
-
-TreapNode* exists (TreapNode* tree, int searched_value);
-
 TreapNode* insert_number (TreapNode* tree, int new_value, int new_priority);
 
 TreapNode* delete_number (TreapNode* tree, int deleted_value);
 
+TreapNode* merge (TreapNode* t1, TreapNode* t2);
+
+TreePair split (TreapNode* tree, int key);
+
 TreapNode* delete (TreapNode* tree, int* nums, size_t arr_length);
 
 void delete_tree (TreapNode* node);
+
 
 #endif

@@ -4,6 +4,16 @@
 
 #include "BST.h"
 
+BSTNode* construct_node (int key);
+
+BSTNode* get_top (BSTNode* node);
+
+BSTNode* find_min (BSTNode* curr_node);
+
+BSTNode* exists (BSTNode* tree, int value);
+
+
+
 BSTNode* construct_node (int key)
 {
     BSTNode* node = (BSTNode*) calloc (1, sizeof(BSTNode));
@@ -53,7 +63,7 @@ BSTNode* delete_number (BSTNode* tree, int value)
 {
     assert (tree != NULL);
 
-    BSTNode* deleted_node = find_node (tree, value);
+    BSTNode* deleted_node = exists (tree, value);
 
     if (deleted_node == NULL)
         return tree;
@@ -132,21 +142,20 @@ BSTNode* delete_number (BSTNode* tree, int value)
     return get_top (deleted_node);
 }
 
-BSTNode* find_node (BSTNode* tree, int value)
+BSTNode* exists (BSTNode* tree, int value)
 {
-    if (tree == NULL)
-        return NULL;
-    
-    while (tree != NULL)
-    {
-        if (tree->key == value)
-            return tree;
+    BSTNode* curr_node = tree;
 
-        if (value < tree->key)
-            tree = tree->left;
+    while (curr_node != NULL)
+    {
+        if (curr_node->key == value)
+            return curr_node;
+
+        if (value < curr_node->key)
+            curr_node = curr_node->left;
         
         else
-            tree = tree->right;
+            curr_node = curr_node->right;
     }
 
     return NULL;

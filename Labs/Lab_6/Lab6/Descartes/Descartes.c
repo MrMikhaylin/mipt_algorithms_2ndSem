@@ -6,6 +6,12 @@
 
 #include "Descartes.h"
 
+TreapNode* construct_node (int new_value, int new_priority);
+
+TreapNode* exists (TreapNode* tree, int searched_value);
+
+
+
 TreapNode* construct_node (int new_value, int new_priority)
 {
     TreapNode* new_node = (TreapNode*) calloc (1, sizeof (TreapNode));
@@ -85,9 +91,6 @@ TreapNode* merge (TreapNode* t1, TreapNode* t2)
 
 TreapNode* exists (TreapNode* tree, int searched_value)
 {
-    if (tree == NULL)
-        return NULL;
-
     TreapNode* curr_node = tree;
 
     while (curr_node != NULL)

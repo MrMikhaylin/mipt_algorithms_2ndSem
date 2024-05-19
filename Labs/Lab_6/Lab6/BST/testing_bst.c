@@ -122,7 +122,7 @@ void run_bst_tests (const char* TestsPath, const char* ResultsPath, size_t arr_l
 
 int main()
 {
-    run_bst_tests ("../tests/arrays/", "./bst_sorted", 100000);
+    run_bst_tests ("../tests/arrays/", "./bst/bst_sorted", 100000);
 
     return 0;
 }

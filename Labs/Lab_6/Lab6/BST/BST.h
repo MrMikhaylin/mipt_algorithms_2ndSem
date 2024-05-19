@@ -12,17 +12,9 @@ struct BSTNode
     BSTNode* right;
 };
 
-BSTNode* construct_node (int key);
-
 BSTNode* insert_number (BSTNode* tree, int key);
 
-BSTNode* find_min (BSTNode* curr_node);
-
 BSTNode* delete_number (BSTNode* tree, int value);
-
-BSTNode* find_node (BSTNode* tree, int value);
-
-BSTNode* get_top (BSTNode* node);
 
 BSTNode* delete (BSTNode* tree, int* nums, size_t arr_length);
 
