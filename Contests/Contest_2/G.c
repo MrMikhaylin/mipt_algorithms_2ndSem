@@ -4,8 +4,6 @@
 #include <stdbool.h>
 #include <assert.h>
 
-#include "G.h"
-
 #define MOD     1000000000
 #define COMMAND_LEN 10
 
