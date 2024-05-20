@@ -4,7 +4,13 @@
 #include <stdbool.h>
 #include <assert.h>
 
-#define MOD 1000000000
+#include "G.h"
+
+#define MOD     1000000000
+#define COMMAND_LEN 10
+
+#define STRLEN_(x) #x
+#define STRLEN(x) STRLEN_(x)
 
 enum ERROR
 {
@@ -234,7 +240,7 @@ TreapNode* exists (TreapNode* tree, int searched_value)
     return NULL;
 }
 
-TreapNode* insert (TreapNode* tree, int new_value, int new_priority)
+TreapNode* insert_number (TreapNode* tree, int new_value, int new_priority)
 {
     TreapNode* new_node = construct_node (new_value, new_priority);
     assert (new_node != NULL);
@@ -266,7 +272,7 @@ TreapNode* insert (TreapNode* tree, int new_value, int new_priority)
     return new_node;
 }
 
-TreapNode* delete (TreapNode* tree, int deleted_value)
+TreapNode* delete_number (TreapNode* tree, int deleted_value)
 {
     TreapNode* deleted_node = exists (tree, deleted_value);
 
@@ -305,6 +311,84 @@ TreapNode* delete (TreapNode* tree, int deleted_value)
     return node_parent;
 }
 
+void delete_tree (TreapNode* node)
+{
+    if (node == NULL)
+        return;
+        
+    delete_tree (node->left);
+    delete_tree (node->right);
+
+    free (node);
+}
+
+TreapNode* match_the_tree (TreapNode* tree, char* command, int curr_value, FILE* file_out)
+{
+    if (strcmp (command, "insert") == 0)
+    {
+        int curr_priority = rand () % MOD;
+        tree = insert_number (tree, curr_value, curr_priority);
+
+        return tree;
+    }
+        
+    if (strcmp (command, "delete") == 0)
+    {
+        tree = delete_number (tree, curr_value);
+            
+        return tree;
+    }
+        
+    if (strcmp (command, "exists") == 0)
+    {
+        if (exists (tree, curr_value))
+            fprintf (file_out, "true\n");
+            
+        else
+            fprintf (file_out, "false\n");
+
+        return tree;
+    }           
+        
+    if (strcmp (command, "next") == 0)
+    {
+        int searched_value = 0;
+        if (next (tree, curr_value, &searched_value))
+            fprintf (file_out, "%d\n", searched_value);
+        
+        else
+            fprintf (file_out, "none\n");
+
+        return tree;
+    }
+
+    if (strcmp (command, "prev") == 0)
+    {
+        int searched_value = 0;
+        if (prev (tree, curr_value, &searched_value))
+            fprintf (file_out, "%d\n", searched_value);
+            
+        else
+            fprintf (file_out, "none\n");
+
+        return tree;
+    }
+                                    
+    if (strcmp (command, "kth") == 0)
+    {
+        int searched_value = 0;
+        if (kstat (tree, curr_value, &searched_value))
+            fprintf (file_out, "%d\n", searched_value);
+            
+        else
+            fprintf (file_out, "none\n");
+
+        return tree;
+    }
+
+    printf ("Seek mistake in scanning\n");
+}
+
 int main()
 {
     FILE* file_in = fopen ("input.txt", "r");
@@ -314,77 +398,17 @@ int main()
     int curr_value = 0;
     int curr_priority = 0;
 
-    char* command = (char*) calloc (10, sizeof (char));
+    char* command = (char*) calloc (COMMAND_LEN, sizeof (char));
     assert (command != NULL);
 
     TreapNode* tree = NULL;
 
-    while (fscanf (file_in, "%s\t%d\n", command, &curr_value) != EOF)
+    while (fscanf (file_in, "%" STRLEN(COMMAND_LEN) "s\t%d\n", command, &curr_value) != EOF)
     {
-        if (strcmp (command, "insert") == 0)
-        {
-            int curr_priority = rand()%MOD;
-            tree = insert (tree, curr_value, curr_priority);
-
-            continue;
-        }
-        
-        if (strcmp (command, "delete") == 0)
-        {
-            tree = delete (tree, curr_value);
-            
-            continue;
-        }
-        
-        if (strcmp (command, "exists") == 0)
-        {
-            if (exists (tree, curr_value))
-                fprintf (file_out, "true\n");
-            
-            else
-                fprintf (file_out, "false\n");
-
-            continue;
-        }           
-        
-        if (strcmp (command, "next") == 0)
-        {
-            int searched_value = 0;
-            if (next (tree, curr_value, &searched_value))
-                fprintf (file_out, "%d\n", searched_value);
-            
-            else
-                fprintf (file_out, "none\n");
-
-            continue;
-        }
-
-        if (strcmp (command, "prev") == 0)
-        {
-            int searched_value = 0;
-            if (prev (tree, curr_value, &searched_value))
-                fprintf (file_out, "%d\n", searched_value);
-            
-            else
-                fprintf (file_out, "none\n");
-
-            continue;
-        }
-                                    
-        if (strcmp (command, "kth") == 0)
-        {
-            int searched_value = 0;
-            if (kstat (tree, curr_value, &searched_value))
-                fprintf (file_out, "%d\n", searched_value);
-            
-            else
-                fprintf (file_out, "none\n");
-
-            continue;
-        }
-
-        printf ("Seek mistake in scanning\n");
+        tree = match_the_tree (tree, command, curr_value, file_out);
     }
+
+    delete_tree (tree);
 
     fclose (file_in);
     fclose (file_out);
