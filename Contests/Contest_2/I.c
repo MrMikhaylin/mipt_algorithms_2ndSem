@@ -6,6 +6,7 @@
 
 #define BUFF_SZE 4096
 
+// Узел Splay-дерева 
 typedef struct SplayNode SplayNode;
 
 struct SplayNode
@@ -18,13 +19,61 @@ struct SplayNode
     SplayNode* right;
 };
 
+typedef struct TreePair
+{
+    SplayNode* first;
+    SplayNode* second;
+}TreePair;
+
+SplayNode* find_closest_lower (SplayNode* tree, char* key)
+{
+    SplayNode* closest = NULL;
+    SplayNode* curr_node = tree;
+
+    while (curr_node != NULL)
+    {
+        int compare = strcmp (key, curr_node->key);
+
+        if (compare == 0)
+            return curr_node;
+
+        if (compare < 0)
+            curr_node = curr_node->left;
+
+        else
+        {
+            closest = curr_node;
+            curr_node = curr_node->right;
+        }
+    }
+    
+    return closest;
+}
+
+TreePair split (SplayNode* tree)
+{
+    TreePair result = {};
+
+    SplayNode* right_child = tree->right;
+    if (right_child) right_child->parent = NULL;
+    tree->right = NULL;
+
+    result.first = tree;
+    result.second = right_child;
+
+    return result;
+}
+
 SplayNode* construct_node (char* key, char* connect)
 {
     SplayNode* new_node = (SplayNode*) calloc (1, sizeof (SplayNode));
     assert (new_node != NULL);
+
+    char* str_1 = strdup (key);
+    char* str_2 = strdup (connect);
     
-    new_node->connect = connect;
-    new_node->key = key;
+    new_node->connect = str_2;
+    new_node->key = str_1;
     
     return new_node;
 }
@@ -130,50 +179,36 @@ SplayNode* insert (SplayNode* tree, char* key, char* connect)
     if (tree == NULL)
         return new_node;
 
-    SplayNode* curr_node = tree;
-    
-    while (true)
+    SplayNode* closest = find_closest_lower (tree, key);
+
+    if (closest == NULL)
     {
-        if (curr_node->key == key)
-            break;
-    
-        if (strcmp (key, curr_node->key) < 0)
-            if (curr_node->left != NULL)
-                curr_node = curr_node->left;
-            
-            else
-            {
-                new_node->parent = curr_node;
-                curr_node->left = new_node;
-                break;
-            }
-        
-        else
-            if (curr_node->right != NULL)
-                curr_node = curr_node->right;
-            
-            else
-            {
-                new_node->parent = curr_node;
-                curr_node->right = new_node;
-                break;
-            }
+        new_node->right = tree; if (tree) tree->parent = new_node;
+        return new_node;
     }
 
-    return splay (new_node);
+    tree = splay (closest);
+    TreePair pair = split (tree);
+
+    new_node->left = pair.first; if (pair.first) pair.first->parent = new_node;
+    new_node->right = pair.second; if (pair.second) pair.second->parent = new_node;
+    
+    return new_node;
 }
 
-SplayNode* find_note (SplayNode* tree, char* request)
+SplayNode* exists (SplayNode* tree, char* request)
 {
     SplayNode* curr_node = tree;
 
     while (curr_node != NULL)
     {
-        if (strcmp (curr_node->key, request) == 0)
+        int compare = strcmp (request, curr_node->key);
+        
+        if (compare == 0)
             return curr_node;
         
         else
-            if (strcmp (request, curr_node->key) < 0)
+            if (compare < 0)
                 curr_node = curr_node->left;
             
             else
@@ -185,7 +220,7 @@ SplayNode* find_note (SplayNode* tree, char* request)
 
 char* search (SplayNode** pilot_tree, SplayNode** aircraft_tree, char* request)
 {
-    SplayNode* ask = find_note (*pilot_tree, request);
+    SplayNode* ask = exists (*pilot_tree, request);
     // search in the pilot_tree
     if (ask)
     {
@@ -197,25 +232,22 @@ char* search (SplayNode** pilot_tree, SplayNode** aircraft_tree, char* request)
     // search in the aircraft_tree
     else
     {
-        ask = find_note (*aircraft_tree, request);
+        ask = exists (*aircraft_tree, request);
         SplayNode* new_tree = splay (ask);
         *aircraft_tree = new_tree;
         return new_tree->connect;
     }
 }
 
-void walk (SplayNode* node) 
+void delete_tree (SplayNode* tree)
 {
-    if (node == NULL)
+    if (tree == NULL)
         return;
+        
+    delete_tree (tree->left);
+    delete_tree (tree->right);
 
-    printf ("%s  connect:%s\n", node->key, node->connect);
-
-    if (node->left != NULL)
-        walk (node->left);
-    
-    if (node->right != NULL)
-        walk (node->right);
+    free (tree);
 }
 
 int main()
@@ -230,12 +262,11 @@ int main()
     SplayNode* pilot_tree = NULL;
     SplayNode* aircraft_tree = NULL;
 
+    char pilot[BUFF_SZE] = {};
+    char aircraft[BUFF_SZE] = {};
+
     for (int i = 0; i < N; i++)
     {
-        char* pilot = (char*) malloc (BUFF_SZE);
-        char* aircraft = (char*) malloc (BUFF_SZE);
-        assert (pilot && aircraft);
-
         fscanf (file_in, "%s %s\n", pilot, aircraft);
         
         pilot_tree = insert (pilot_tree, pilot, aircraft);
@@ -245,16 +276,18 @@ int main()
     int Q = 0;
     fscanf (file_in, "%d\n", &Q);
 
+    char* request = pilot;
+
     for (int i = 0; i < Q; i++)
     {
-        char* request = (char*) malloc (BUFF_SZE);
-        assert (request);
-
         fscanf (file_in, "%s\n", request);
         char* answer = search (&pilot_tree, &aircraft_tree, request);
 
         fprintf (file_out, "%s\n", answer);
     }
+
+    delete_tree (pilot_tree);
+    delete_tree (aircraft_tree);
 
     fclose (file_in);
     fclose (file_out);
