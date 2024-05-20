@@ -98,7 +98,7 @@ enum ERROR prev (TreapNode* tree, int value, int* prev_value);
 TreapNode* construct_node (int new_value, int new_priority);
 
 /*!
- * Разрезание дерева.
+ * Разрезание дерева
  * \param[in] Указатель на корень дерева
  * \param[in] Ключ по которому происходит разрезание
  * \param[out] Структура разрезания 
