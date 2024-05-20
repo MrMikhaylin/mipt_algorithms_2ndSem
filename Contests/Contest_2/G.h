@@ -90,7 +90,7 @@ enum ERROR next (TreapNode* tree, int value, int* next_value);
 enum ERROR prev (TreapNode* tree, int value, int* prev_value);
 
 /*!
- * Конструктор нового корня
+ * Конструктор нового узла
  * \param[in] Значение нового узла
  * \param[in] Приоритет нового узла
  * \param[out] Указатель на новый корень (его структуру)
