@@ -5,12 +5,29 @@
 #include <assert.h>
 
 #define BUFF_SZE 4096
+#define NEW_CAP  10
 
-// Узел Splay-дерева 
 typedef struct SplayNode SplayNode;
+typedef struct Stack Stack;
+
+typedef SplayNode* elem_t;
+
+enum ERROR
+{
+    OK = 1,
+    FAULT = 0
+};
+
+struct Stack
+{
+    SplayNode** data;
+    size_t size;
+    size_t capacity;
+};
 
 struct SplayNode
 {
+    bool visited;
     char* key;
     char* connect;
 
@@ -24,6 +41,65 @@ typedef struct TreePair
     SplayNode* first;
     SplayNode* second;
 }TreePair;
+
+Stack* stack_ctor (size_t elem_size, size_t new_capacity)
+{
+    Stack* stk = (Stack*) calloc (1, sizeof (Stack));
+    assert (stk != NULL);
+
+    stk->capacity = new_capacity;
+    stk->size = 0;
+    
+    stk->data = (void*) calloc (stk->capacity, elem_size);
+    assert (stk->data != NULL);
+
+    return stk;
+}
+
+enum ERROR stack_push (Stack* stk, elem_t number)
+{
+    if (stk == NULL) return FAULT;
+
+    if (stk->size == stk->capacity)
+    {
+        stk->data = (void*) realloc ((elem_t *)stk->data, 2 * stk->capacity * sizeof (elem_t));
+        if (stk->data == NULL) return FAULT;
+        
+        stk->capacity *= 2;
+    }
+
+    ((elem_t*) (stk->data))[stk->size] = number;
+    stk->size++;
+
+    return OK;
+}
+
+elem_t stack_pop (Stack* stk)
+{
+    if ((stk == NULL) || (stk->size <= 0)) return FAULT;
+
+    elem_t number = NULL;
+
+    if (stk->size <= stk->capacity/4)
+    {
+        stk->data = (void*) realloc ((elem_t*) stk->data, stk->capacity * sizeof (elem_t)/2);
+        if (stk->data == NULL) return FAULT;
+
+        stk->capacity /= 2;
+    }
+
+    if (stk->size > 0)
+    {
+        number = ((elem_t*) (stk->data))[stk->size - 1];
+
+        ((elem_t*) (stk->data))[stk->size - 1] = 0;
+
+        stk->size--;
+    }
+
+    return number;
+}
+
 
 SplayNode* find_closest_lower (SplayNode* tree, char* key)
 {
@@ -74,6 +150,7 @@ SplayNode* construct_node (char* key, char* connect)
     
     new_node->connect = str_2;
     new_node->key = str_1;
+    new_node->visited = 0;
     
     return new_node;
 }
@@ -243,11 +320,38 @@ void delete_tree (SplayNode* tree)
 {
     if (tree == NULL)
         return;
-        
-    delete_tree (tree->left);
-    delete_tree (tree->right);
 
-    free (tree);
+    Stack* stk = stack_ctor (sizeof (elem_t), NEW_CAP);
+    assert (stk != NULL);
+
+    SplayNode* curr_node = tree;
+    
+    stack_push (stk, curr_node);
+    while (stk->size != 0)
+    {
+        SplayNode* curr_node = stack_pop (stk);
+        assert (curr_node != NULL);
+
+        SplayNode* ch_1 = curr_node->left;
+        SplayNode* ch_2 = curr_node->right;
+
+        curr_node->visited = 1;
+        
+        free (curr_node->key);
+            free (curr_node->connect);
+                free (curr_node);
+
+        if (ch_1 != NULL)
+            if (ch_1->visited == 0)
+                stack_push (stk, ch_1);
+        
+        if (ch_2 != NULL)
+            if (ch_2->visited == 0)
+                stack_push (stk, ch_2);
+    }
+    
+    free (stk->data);
+    free (stk);
 }
 
 int main()
