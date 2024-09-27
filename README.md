@@ -1,2 +1,2 @@
-# mipt_algorithms
- mipt_algorithms
+# mipt_algorithms_2ndSem
+ mipt_algorithms_2ndSem
